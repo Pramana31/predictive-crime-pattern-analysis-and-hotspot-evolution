@@ -71,10 +71,11 @@ The network splits into two parallel outputs:
 * **Output the final analysis** showing exactly where urban crime activity is expected to increase, remain persistent, decrease, or return to a stable baseline.
    ## ASTGCN Model Performance:
 
-Evaluation Metric	Value
-Mean Absolute Error (MAE)	9.49
-Root Mean Squared Error (RMSE)	15.38
-Coefficient of Determination (R2 )	0.8899
+| Evaluation Metric | Value |
+| :--- | :--- |
+| **Mean Absolute Error (MAE)** | 9.49 |
+| **Root Mean Squared Error (RMSE)** | 15.38 |
+| **Coefficient of Determination (R²)** | 0.8899 |
 
 ## SUMMARY:
 This project proposes a practical attention based spatio-temporal graph model for predictive crime pattern analysis. The main idea is simple. Represent the city as connected regions, use historical crime counts as time based features, learn important spatial and temporal relationships with attention and predict the next period crime count and classify how each region's hotspot status is evolving. The approach is supported by the reviewed literature on graph based crime prediction, attention models, grid based deep learning and STGNNs. The final predictions are evaluated with standard error measures and hotspot classification measures and shown on maps so that the results are easy to understand.
