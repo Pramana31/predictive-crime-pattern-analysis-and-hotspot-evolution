@@ -27,42 +27,48 @@ The model is trained using Chicago crime records from 2001 to 2023. The results 
 The project focuses on public urban crime data containing location, timestamp, and crime-related attributes. The study area is represented using Chicago's 77 community area as administrative regions. The system covers data preprocessing, graph construction, spatio-temporal model training, crime-count prediction, and hotspot evolution. The system incorporates features derived from crime records including arrest rate, domestic incident rate, time of day. The main outputs are the predicted crime count for each region and a hotspot evolution classification (emerging, persisting, dissipating or stable) describing how each region's crime activity is expected to change over the coming time window. The project is intended for research and decision support purposes not for identifying individual offenders.
    # PROPOSED SYSTEM:
 The proposed system follows an ASTGCN-style workflow. First crime records are cleaned and aggregated into fixed time intervals for each spatial region. Each region becomes a graph node and nearby regions are connected using a spatial rule based on geographic distance. The historical node features are arranged as a spatio-temporal input. Spatial attention learns which regions have stronger relationships while temporal attention learns which historical time steps are more useful. The spatial-temporal convolution block then uses graph convolution to learn spatial patterns and temporal convolution to learn changes over time. A single step historical window is used as model input. An ablation study across window lengths (1, 3, 5 and 12 weeks) showed no significant performance difference and a 1-week window is selected for the final model based on efficiency and simplicity. The final layer predicts crime counts for the next time period which are converted into both a crime density map and a hotspot evolution map showing predicted transition states (emerging, persisting, dissipating or stable) for each region.
-  ##  DESIGN & METHODOLOGY:
-A. Data Preprocessing:
-    • Relevant fields were selected from the raw crime records.
-    • Date and time values were converted into a standard datetime format.
-    • Latitude, longitude and community area values were converted into numeric form.
-    • Boolean fields such as Arrest and Domestic were encoded as binary values.
-    • Records with missing Date, Community Area, Latitude, or Longitude were removed.
-    • Records with Community Area 0 were also excluded because they represent unclassified locations.
-B. Spatial Graph Construction:
-    • Chicago was divided into 77 community areas, with each area represented as a graph node.
-    • The average latitude and longitude of the crime records were used to determine the location of each community area.
-    • Pairwise distances between community-area centroids were calculated.
-    • Connections were created between areas within the closest 15% of the observed distance distribution.
-    • The resulting connections formed the adjacency matrix used by the graph convolution layers.
-    • Chebyshev graph convolution was used to capture information from multiple spatial hops.
-C. Temporal Aggregation:
-    • Individual crime records were aggregated into weekly crime counts for each community area.
-    • A logarithmic transformation was applied to reduce large differences in crime counts.
-    • The transformed values were standardized using z-score normalization.
-    • A sliding-window method was used to prepare the training samples.
-    • The previous week's information was used to predict the crime count for the following week.
-D. ASTGCN Deep Learning Core:
-    • The model uses an Attention-based Spatio-Temporal Graph Convolutional Network (ASTGCN).
-    • Temporal Attention Layer: identifies the time steps that contribute more to the prediction.
-    • Spatial Attention Layer: learns different importance levels for relationships between community areas.
-    • Spatio-Temporal Convolution: combines Chebyshev graph convolution with one-dimensional temporal convolution.
-    • ReLU activation is applied after the convolution operations.
-    • The spatio-temporal convolution block is applied twice for further feature extraction.
-E. Prediction Output Head
-The model produces two outputs:
-    • Count Head: predicts the expected crime count for each community area in the next week.
-    • Transition Head: assigns each area to one of four hotspot-transition categories such as Emerging,Persisting, Dissipating and Stable.
-F. Final Forecast
-    • The predicted crime counts are arranged into a crime density matrix covering the community areas and forecast weeks.
-    • A hotspot evolution map displays the predicted transition category of each community area.
-    • The map helps show areas where crime activity is expected to increase, remain persistent, decrease, or remain stable.
+  ## **Design & Methodology**
+
+**Data Preprocessing**
+* **Select relevant fields** from the raw crime records.
+* **Format timestamps** by converting date and time values into a standard datetime format.
+* **Digitize location data** by converting latitude, longitude, and community area values into numeric form.
+* **Encode boolean fields** (such as Arrest and Domestic) as binary values.
+* **Clean the dataset** by removing records with missing Date, Community Area, Latitude, or Longitude.
+* **Exclude anomalies** by dropping records assigned to Community Area 0, which represent unclassified locations.
+
+**Spatial Graph Construction**
+* **Define the nodes** by dividing Chicago into 77 distinct community areas.
+* **Calculate centroids** using the average latitude and longitude of the crime records within each community area.
+* **Compute pairwise distances** between all community-area centroids.
+* **Create spatial edges** by connecting areas that fall within the closest 15% of the observed distance distribution.
+* **Generate the adjacency matrix** from these connections to map the graph structure.
+* **Apply Chebyshev graph convolution** to capture information spanning multiple spatial hops across the network.
+
+**Temporal Aggregation**
+* **Group the data** by aggregating individual crime records into weekly crime counts for each community area.
+* **Normalize variance** by applying a logarithmic transformation to reduce extreme differences in crime counts.
+* **Standardize the values** using z-score normalization to ensure consistent scale.
+* **Format for sequential learning** by implementing a sliding-window method to prepare the training samples.
+* **Define the target variable** by using the previous week's information as input to predict the crime count for the following week.
+
+**ASTGCN Deep Learning Core**
+* **Initialize the model** using the Attention-based Spatio-Temporal Graph Convolutional Network (ASTGCN) architecture.
+* **Process Temporal Attention** to identify and weigh the historical time steps that contribute most heavily to the prediction.
+* **Process Spatial Attention** to learn the varying importance levels of relationships between neighboring community areas.
+* **Execute Spatio-Temporal Convolution** by interleaving Chebyshev graph convolution (spatial) with one-dimensional temporal convolution (time).
+* **Apply ReLU activation** immediately after the convolution operations to introduce non-linearity.
+* **Stack the layers** by applying the spatio-temporal convolution block twice for deeper feature extraction.
+
+**Prediction Output Head**
+The network splits into two parallel outputs:
+* **Count Head:** Predicts the continuous expected crime count for each community area in the upcoming week.
+* **Transition Head:** Classifies each area into one of four hotspot-transition categories: Emerging, Persisting, Dissipating, or Stable.
+
+**Final Forecast Generation**
+* **Construct a crime density matrix** by arranging the predicted crime counts across all community areas and forecast weeks.
+* **Generate a hotspot evolution map** to visually display the predicted transition category of each community area.
+* **Output the final analysis** showing exactly where urban crime activity is expected to increase, remain persistent, decrease, or return to a stable baseline.
    ## ASTGCN Model Performance:
 
 Evaluation Metric	Value
