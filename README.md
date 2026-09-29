@@ -1,27 +1,27 @@
 # predictive-crime-pattern-analysis-and-hotspot-evolution
 Attention-based Spatio-Temporal Graph Convolutional Network (ASTGCN) for predictive crime pattern analysis and hotspot evolution.
 
-Crime patterns vary across different parts of a city and change over time. Predicting these variations requires a model that can account for both geographic relationships and temporal trends. This paper presents an Attention-based Spatio-Temporal Graph Convolutional Network (ASTGCN) for predictive crime pattern analysis and hotspot evolution. The proposed approach represents Chicago’s 77 community areas as nodes in a spatial graph and uses historical crime records to construct weekly crime-count sequences. Spatial and temporal attention mechanisms are incorporated to learn changing relationships between neighboring areas and historical time steps. The model generates weekly crime-count predictions and identifies changes in hotspot conditions across successive time windows.
+#Crime patterns vary across different parts of a city and change over time. Predicting these variations requires a model that can account for both geographic relationships and temporal trends. This paper presents an Attention-based Spatio-Temporal Graph Convolutional Network (ASTGCN) for predictive crime pattern analysis and hotspot evolution. The proposed approach represents Chicago’s 77 community areas as nodes in a spatial graph and uses historical crime records to construct weekly crime-count sequences. Spatial and temporal attention mechanisms are incorporated to learn changing relationships between neighboring areas and historical time steps. The model generates weekly crime-count predictions and identifies changes in hotspot conditions across successive time windows.
 Model is trained using Chicago crime records from 2001 to 2023. The results show that the proposed model can capture meaningful variations in crime activity across community
 areas and provide information about the evolution of predicted hotspots.
 Keywords—Crime prediction, spatio-temporal graph neural network, ASTGCN, spatial attention, temporal attention, hotspot evolution.
 
-    [1.] INTRODUCTION:
+   # [1.] INTRODUCTION:
 	Crime incidents are not distributed uniformly across an urban area. Some community areas experience consistently higher crime activity while others show changes depending on the time period. These variations make crime prediction a spatial as well as a temporal problem. A model that considers only the total number of incidents may overlook where crime activity is concentrated and how these concentrations change over time. Many existing crime prediction approaches use statistical models, machine learning algorithms, or deep learning architectures to forecast future crime counts. Although these methods can identify patterns in historical records, representing the relationships between different geographic areas remains a challenge. In particular, conventional grid-based approaches do not necessarily reflect the actual spatial organization of a city. This work considers Chicago's 77 community areas as connected geographic units rather than independent locations. A spatial graph is constructed by connecting nearby community areas, allowing the model to use information from neighboring regions during prediction. Historical crime records are aggregated into weekly counts, which are then used to learn temporal patterns. The proposed framework is based on an Attention-based Spatio-Temporal Graph Convolutional Network (ASTGCN). Temporal attention assigns different weights to historical time steps, while spatial attention learns the relative importance of geographic relationships. Graph convolution and temporal convolution are then used to extract spatio-temporal features from the input sequences. In addition to forecasting crime counts, this work examines how predicted crime activity changes across community areas. The model produces a crime-density representation and assigns hotspot transition states such as emerging, persisting, dissipating, and stable-normal. These outputs provide a way to examine changes in predicted crime concentration rather than relying only on a single forecast value. The study uses Chicago crime records collected between 2001 and 2023. The main objectives are to develop a graph-based crime-count prediction model, capture spatial and temporal dependencies through attention mechanisms, and use the resulting predictions to analyze hotspot evolution across community areas.
-    [2.] PROBLEM STATEMENT:
+    #[2.] PROBLEM STATEMENT:
 	Existing crime forecasting methods have several limitations. Grid based CNN and LSTM models can learn local spatial or temporal patterns but they do not explicitly represent relationships between different regions. KNN based graph models can represent spatial relationships but their temporal modeling may be simpler. More detailed approaches such as street network or hybrid models can capture richer relationships but may require more data and a more complex pipeline. Crime data can also be sparse with many time periods having low or zero counts. Therefore, there is a need for a practical model that can represent spatial relationships using a simple distance based rule that will learn which historical time steps are most important through attention and produce clear hotspot evolution.
-    [3.] OBJECTIVES:
+    #[3.] OBJECTIVES:
 • To develop an attention-based spatio-temporal graph model that captures spatial and temporal crime patterns for predictive analysis.
 • To clean and transform crime records into spatial nodes and time-based sequences.
 • To build a graph that represents relationships between nearby crime regions.
 • To use spatial and temporal attention to learn important regions and historical time steps.
 • To predict crime counts and identify high-risk regions for the next time period.
 • To evaluate the model using MAE and RMSE, along with hotspot Precision, Recall, and F1-score where applicable.
-    [4.] SCOPE OF THE PROJECT:
+    #[4.] SCOPE OF THE PROJECT:
 The project focuses on public urban crime data containing location, timestamp, and crime-related attributes. The study area is represented using Chicago's 77 community area as  administrative regions. The system covers data preprocessing, graph construction, spatio-temporal model training, crime-count prediction, and hotspot evolution. The system incorporates features derived from crime records including arrest rate, domestic incident rate, time of day. The main outputs are the predicted crime count for each region and a hotspot evolution classification (emerging, persisting, dissipating or stable) describing how each region's crime activity is expected to change over the coming time window. The project is intended for research and decision support purposes not for identifying individual offenders.
-    [5.] PROPOSED SYSTEM:
+   # [5.] PROPOSED SYSTEM:
 The proposed system follows an ASTGCN-style workflow. First crime records are cleaned and aggregated into fixed time intervals for each spatial region. Each region becomes a graph node and nearby regions are connected using a spatial rule based on geographic distance. The historical node features are arranged as a spatio-temporal input. Spatial attention learns which regions have stronger relationships while temporal attention learns which historical time steps are more useful. The spatial-temporal convolution block then uses graph convolution to learn spatial patterns and temporal convolution to learn changes over time. A single step historical window is used as model input. An ablation study across window lengths (1, 3, 5 and 12 weeks) showed no significant performance difference and a 1-week window is selected for the final model based on efficiency and simplicity. The final layer predicts crime counts for the next time period which are converted into both a crime density map and a hotspot evolution map showing predicted transition states (emerging, persisting, dissipating or stable) for each region.
-    [6.] LITERATURE SURVEY:
+    #[6.] LITERATURE SURVEY:
 S.NO	TITLE	MERITS	DEMERITS
 1	Spatial-Temporal Sequential Hypergraph Network for Crime Prediction with Dynamic Multiplex Relation Learning	The paper models crime using spatial and temporal relationships and a hypergraph. It can learn relationships between different regions and crime types, including both nearby and more distant dependencies.	The hypergraph and multiplex relation learning make the model more complex. It also needs more computation and careful modeling than a basic ST-GNN.
 2	Spatio-Temporal-Network Point Processes for Modeling Crime Events with Landmarks	The paper considers the street network instead of using only straight-line distance. It also includes nearby landmarks and learns relationships between crime and urban environment.	It requires detailed street-network and landmark information. The point-process framework is specialized and is more difficult to implement than a standard graph neural network.
@@ -39,7 +39,7 @@ S.NO	TITLE	MERITS	DEMERITS
 14	Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction	The model uses residual deep learning to capture spatial and temporal patterns in citywide data. It demonstrates that recent and periodic temporal information can improve urban prediction.	The model is designed for crowd-flow prediction and uses a grid-like spatial representation. It does not explicitly model graph topology between crime regions.
 15	Long Short-Term Memory	LSTM is designed to learn long-term dependencies in sequential data. It is useful for modeling daily, weekly and other time-dependent crime patterns and can serve as a temporal baseline.	LSTM alone does not understand spatial relationships between regions. Each region may be treated as an independent sequence unless a spatial model is added.
 
-    [7.]  DESIGN & METHODOLOGY:
+    #[7.]  DESIGN & METHODOLOGY:
 A. Data Preprocessing:
     • Relevant fields were selected from the raw crime records.
     • Date and time values were converted into a standard datetime format.
@@ -75,7 +75,7 @@ F. Final Forecast
     • The predicted crime counts are arranged into a crime density matrix covering the community areas and forecast weeks.
     • A hotspot evolution map displays the predicted transition category of each community area.
     • The map helps show areas where crime activity is expected to increase, remain persistent, decrease, or remain stable.
-    [8.] SAMPLE CODE:
+   # [8.] SAMPLE CODE:
 Use the columns which are needed:
 
 
@@ -117,7 +117,7 @@ Spatial Attention Layer:
 STConvBlock:
 
 
-    [9.] OUTCOME OF THE PROJECT:
+  #  [9.] OUTCOME OF THE PROJECT:
 Predictive Crime Pattern Analysis:
 
 
@@ -162,36 +162,10 @@ The reviewed studies show that crime forecasting has moved from traditional stat
     • Scalability: Handle different numbers of spatial regions and historical time windows.
     • Reliability: Handle missing values and sparse crime counts safely.
     • Interpretability: Present predictions as clear regional hotspot maps.
-[9.] SYSTEM ARCHITECTURE:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[10]. UML DIAGRAMS:
-
-Use Case Diagram:
-
-
-Class Diagram:
-
-
-
-
-
-[11.] SUMMARY:
+#[11.] SUMMARY:
 This project proposes a practical attention based spatio-temporal graph model for predictive crime pattern analysis. The main idea is simple. Represent the city as connected regions, use historical crime counts as time based features, learn important spatial and temporal relationships with attention and predict the next period crime count and classify how each region's hotspot status is evolving. The approach is supported by the reviewed literature on graph based crime prediction, attention models, grid based deep learning and STGNNs. The final predictions are evaluated with standard error measures and hotspot classification measures and shown on maps so that the results are easy to understand.
 
-[12.] REFERENCES:
+#[12.] REFERENCES:
 
     [1.] Xia, L., Huang, C., Xu, Y., Dai, P., Bo, L., Zhang, X., & Chen, T. (2021). Spatial-Temporal Sequential Hypergraph Network for Crime Prediction with Dynamic Multiplex Relation Learning. IJCAI.
     [2.] Dong, Z., Mateu, J., & Xie, Y. (2024). Spatio-Temporal-Network Point Processes for Modeling Crime Events with Landmarks. arXiv preprint.
